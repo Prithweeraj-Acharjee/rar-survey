@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Generated Image Perception Study</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Calibri, Arial, sans-serif; background: #f0f4f8; color: #333; }
+
+  .header { background: #1B2A4A; color: white; padding: 24px 20px; text-align: center; }
+  .header h1 { font-size: 22px; margin-bottom: 6px; }
+  .header p { color: #D4A537; font-size: 14px; }
+
+  .progress-bar { background: #ddd; height: 6px; width: 100%; }
+  .progress-fill { background: #D4A537; height: 6px; transition: width 0.3s; }
+
+  .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .card { background: white; border-radius: 12px; padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .card h2 { color: #1B2A4A; font-size: 20px; margin-bottom: 6px; }
+  .card .subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
+
+  .image-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  .image-option { cursor: pointer; border: 3px solid #e0e0e0; border-radius: 10px; overflow: hidden; transition: all 0.2s; position: relative; }
+  .image-option:hover { border-color: #aaa; transform: scale(1.02); }
+  .image-option.selected { border-color: #D4A537; box-shadow: 0 0 0 3px rgba(212,165,55,0.3); }
+  .image-option img { width: 100%; height: 260px; object-fit: cover; display: block; }
+  .image-option .label { text-align: center; padding: 8px; font-weight: 600; color: #1B2A4A; background: #f8f9fa; font-size: 15px; }
+  .image-option.selected .label { background: #D4A537; color: white; }
+
+  .check-mark { display: none; position: absolute; top: 10px; right: 10px; background: #D4A537; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-size: 16px; font-weight: bold; }
+  .image-option.selected .check-mark { display: block; }
+
+  .btn { display: inline-block; padding: 12px 32px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+  .btn-primary { background: #1B2A4A; color: white; }
+  .btn-primary:hover { background: #2C3E6B; }
+  .btn-secondary { background: #e0e0e0; color: #333; }
+  .btn-secondary:hover { background: #ccc; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .nav-buttons { display: flex; justify-content: space-between; margin-top: 20px; }
+
+  .intro-text { line-height: 1.7; font-size: 15px; color: #555; }
+  .intro-text p { margin-bottom: 12px; }
+
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-weight: 600; color: #1B2A4A; margin-bottom: 8px; font-size: 15px; }
+  .form-group input[type="text"], .form-group select { width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; }
+  .form-group input[type="text"]:focus, .form-group select:focus { border-color: #D4A537; outline: none; }
+
+  .radio-group { display: flex; flex-direction: column; gap: 10px; }
+  .radio-option { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+  .radio-option:hover { border-color: #aaa; }
+  .radio-option.selected { border-color: #D4A537; background: #fdf8ed; }
+  .radio-option input { accent-color: #D4A537; width: 18px; height: 18px; }
+  .radio-option label { cursor: pointer; font-size: 14px; }
+
+  .thank-you { text-align: center; padding: 60px 20px; }
+  .thank-you h2 { color: #1B2A4A; font-size: 28px; margin-bottom: 12px; }
+  .thank-you p { color: #666; font-size: 16px; line-height: 1.6; }
+  .thank-you .check-icon { font-size: 64px; margin-bottom: 20px; }
+
+  .required-note { color: #C0392B; font-size: 12px; margin-top: 4px; display: none; }
+  .required-note.show { display: block; }
+
+  .consent { background: #fdf8ed; border-left: 4px solid #D4A537; padding: 16px; margin: 16px 0; border-radius: 0 8px 8px 0; font-size: 13px; line-height: 1.6; color: #555; }
+
+  @media (max-width: 600px) {
+    .image-grid { grid-template-columns: 1fr; }
+    .image-option img { height: 200px; }
+    .header h1 { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>AI-Generated Image Perception Study</h1>
+  <p>Midwest Graduate Research Symposium 2026 | University of Toledo</p>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="container">
+
+  <!-- PAGE 0: INTRO -->
+  <div class="page active" id="page0">
+    <div class="card">
+      <h2>Welcome</h2>
+      <div class="intro-text">
+        <p>Thank you for participating in this brief academic survey. Your responses will contribute to research on how people perceive AI-generated images of professional roles.</p>
+        <p>You will be shown sets of images and asked to select the one that <strong>best represents</strong> a given role. There are no right or wrong answers — we are interested in your immediate impression.</p>
+        <p><strong>Estimated time:</strong> 3-5 minutes</p>
+        <p><strong>Researchers:</strong> Afroza Nowshin & Prithweeraj Acharjee Porag, The University of Toledo</p>
+      </div>
+      <div class="consent">
+        <strong>Consent:</strong> By proceeding, you confirm that you are 18 years or older and voluntarily agree to participate. Your responses are anonymous and will be used solely for academic research purposes. You may exit at any time.
+      </div>
+      <div class="nav-buttons">
+        <div></div>
+        <button class="btn btn-primary" onclick="nextPage()">Begin Survey &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 1: CEO -->
+  <div class="page" id="page1">
+    <div class="card">
+      <h2>Question 1 of 6</h2>
+      <p class="subtitle">Which image best represents <strong>"a CEO"</strong>?</p>
+      <div class="image-grid" id="grid-q1"></div>
+      <p class="required-note" id="req1">Please select an image to continue.</p>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevPage()">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="nextPage()">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: LEADER -->
+  <div class="page" id="page2">
+    <div class="card">
+      <h2>Question 2 of 6</h2>
+      <p class="subtitle">Which image best represents <strong>"a Leader"</strong>?</p>
+      <div class="image-grid" id="grid-q2"></div>
+      <p class="required-note" id="req2">Please select an image to continue.</p>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevPage()">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="nextPage()">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: NURSE -->
+  <div class="page" id="page3">
+    <div class="card">
+      <h2>Question 3 of 6</h2>
+      <p class="subtitle">Which image best represents <strong>"a Nurse"</strong>?</p>
+      <div class="image-grid" id="grid-q3"></div>
+      <p class="required-note" id="req3">Please select an image to continue.</p>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevPage()">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="nextPage()">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: TEACHER -->
+  <div class="page" id="page4">
+    <div class="card">
+      <h2>Question 4 of 6</h2>
+      <p class="subtitle">Which image best represents <strong>"a Teacher"</strong>?</p>
+      <div class="image-grid" id="grid-q4"></div>
+      <p class="required-note" id="req4">Please select an image to continue.</p>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevPage()">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="nextPage()">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 5: EXECUTIVE -->
+  <div class="page" id="page5">
+    <div class="card">
+      <h2>Question 5 of 6</h2>
+      <p class="subtitle">Which image best represents <strong>"an Executive"</strong>?</p>
+      <div class="image-grid" id="grid-q5"></div>
+      <p class="required-note" id="req5">Please select an image to continue.</p>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevPage()">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="nextPage()">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 6: CAREGIVER -->
+  <div class="page" id="page6">
+    <div class="card">
+      <h2>Question 6 of 6</h2>
+      <p class="subtitle">Which image best represents <strong>"a Caregiver"</strong>?</p>
+      <div class="image-grid" id="grid-q6"></div>
+      <p class="required-note" id="req6">Please select an image to continue.</p>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevPage()">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="nextPage()">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 7: FOLLOW-UP -->
+  <div class="page" id="page7">
+    <div class="card">
+      <h2>A few more questions</h2>
+      <p class="subtitle">Help us understand your selections.</p>
+
+      <div class="form-group">
+        <label>How did you make your selections?</label>
+        <div class="radio-group" id="reasoning">
+          <div class="radio-option" onclick="selectRadio(this, 'reasoning')">
+            <input type="radio" name="reasoning" value="realistic"> <label>It looked most realistic</label>
+          </div>
+          <div class="radio-option" onclick="selectRadio(this, 'reasoning')">
+            <input type="radio" name="reasoning" value="mental_image"> <label>It matched my mental image of the role</label>
+          </div>
+          <div class="radio-option" onclick="selectRadio(this, 'reasoning')">
+            <input type="radio" name="reasoning" value="professional"> <label>It seemed most professional</label>
+          </div>
+          <div class="radio-option" onclick="selectRadio(this, 'reasoning')">
+            <input type="radio" name="reasoning" value="diversity"> <label>I chose based on diversity</label>
+          </div>
+          <div class="radio-option" onclick="selectRadio(this, 'reasoning')">
+            <input type="radio" name="reasoning" value="random"> <label>I chose randomly</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Age range (optional)</label>
+        <select id="age">
+          <option value="">-- Select --</option>
+          <option value="18-24">18-24</option>
+          <option value="25-34">25-34</option>
+          <option value="35-44">35-44</option>
+          <option value="45-54">45-54</option>
+          <option value="55+">55+</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Gender (optional)</label>
+        <div class="radio-group" id="gender">
+          <div class="radio-option" onclick="selectRadio(this, 'gender')">
+            <input type="radio" name="gender" value="male"> <label>Male</label>
+          </div>
+          <div class="radio-option" onclick="selectRadio(this, 'gender')">
+            <input type="radio" name="gender" value="female"> <label>Female</label>
+          </div>
+          <div class="radio-option" onclick="selectRadio(this, 'gender')">
+            <input type="radio" name="gender" value="nonbinary"> <label>Non-binary</label>
+          </div>
+          <div class="radio-option" onclick="selectRadio(this, 'gender')">
+            <input type="radio" name="gender" value="prefer_not"> <label>Prefer not to say</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Field of study or work (optional)</label>
+        <input type="text" id="field" placeholder="e.g., Computer Science, Nursing, Business...">
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevPage()">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="submitSurvey()">Submit Survey &#10003;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 8: THANK YOU -->
+  <div class="page" id="page8">
+    <div class="card thank-you">
+      <div class="check-icon">&#10004;</div>
+      <h2>Thank You!</h2>
+      <p>Your response has been recorded successfully.<br>
+      Your participation helps advance research on AI representation and bias.<br><br>
+      <strong>Researchers:</strong> Afroza Nowshin & Prithweeraj Acharjee Porag<br>
+      The University of Toledo<br>
+      Midwest Graduate Research Symposium 2026</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ADMIN PANEL (hidden) -->
+<div style="text-align:center; padding: 20px; margin-top: 40px;">
+  <button class="btn btn-secondary" onclick="showAdmin()" style="font-size:12px; opacity:0.3;">Admin</button>
+</div>
+<div id="adminPanel" style="display:none; max-width:800px; margin:0 auto; padding:20px;">
+  <div class="card">
+    <h2>Admin: Export Responses</h2>
+    <input type="password" id="adminPass" placeholder="Enter admin password" style="padding:8px; margin:8px 0; width: 200px;">
+    <button class="btn btn-primary" onclick="exportCSV()" style="margin-left:8px;">Export CSV</button>
+    <p id="adminMsg" style="margin-top:8px; color:#666; font-size:13px;"></p>
+    <p style="margin-top:12px; font-size:13px; color:#999;">Total responses stored: <span id="responseCount">0</span></p>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// IMAGE DATA — Option A = DALL-E default, B/C/D = diverse alternatives
+// Description codes for analysis:
+// CEO:    A=white-male-suit  B=woman-of-color-blazer  C=white-male-older  D=women-business-suit
+// Leader: A=white-male-flags B=black-woman-podium     C=woman-microphone  D=woman-podium-speech
+// Nurse:  A=white-female     B=male-scrubs            C=woman-documents   D=woman-scrubs-confident
+// Teacher:A=white-female     B=male-laptop-classroom   C=male-university  D=male-world-teaching
+// Exec:   A=white-male-suit  B=black-male-suit        C=woman-business   D=man-suit-thoughtful
+// Care:   A=white-female     B=male-helping-elderly   C=nursing-home     D=woman-exercise-helping
+// ============================================================
+
+const imageData = {
+  q1: {
+    role: "CEO",
+    options: [
+      { id: "A", src: "images/q1_a.png", desc: "dalle-white-male-suit-office" },
+      { id: "B", src: "images/q1_b.jpg", desc: "woman-of-color-blazer-glasses" },
+      { id: "C", src: "images/q1_c.jpg", desc: "older-white-male-suit" },
+      { id: "D", src: "images/q1_d.jpg", desc: "women-business-suit-group" }
+    ]
+  },
+  q2: {
+    role: "Leader",
+    options: [
+      { id: "A", src: "images/q2_a.png", desc: "dalle-white-male-flags-podium" },
+      { id: "B", src: "images/q2_b.jpg", desc: "black-woman-podium-flag" },
+      { id: "C", src: "images/q2_c.jpg", desc: "woman-microphone-speech" },
+      { id: "D", src: "images/q2_d.jpg", desc: "woman-podium-speech" }
+    ]
+  },
+  q3: {
+    role: "Nurse",
+    options: [
+      { id: "A", src: "images/q3_a.png", desc: "dalle-white-female-scrubs" },
+      { id: "B", src: "images/q3_b.jpg", desc: "male-scrubs-arms-crossed" },
+      { id: "C", src: "images/q3_c.jpg", desc: "woman-documents-hospital" },
+      { id: "D", src: "images/q3_d.jpg", desc: "woman-scrubs-confident-portrait" }
+    ]
+  },
+  q4: {
+    role: "Teacher",
+    options: [
+      { id: "A", src: "images/q4_a.png", desc: "dalle-white-female-classroom" },
+      { id: "B", src: "images/q4_b.jpg", desc: "male-laptop-classroom" },
+      { id: "C", src: "images/q4_c.jpg", desc: "male-teaching-university" },
+      { id: "D", src: "images/q4_d.jpg", desc: "male-teaching-world-map" }
+    ]
+  },
+  q5: {
+    role: "Executive",
+    options: [
+      { id: "A", src: "images/q5_a.png", desc: "dalle-white-male-suit-skyline" },
+      { id: "B", src: "images/q5_b.jpg", desc: "black-male-suit-modern-office" },
+      { id: "C", src: "images/q5_c.jpg", desc: "woman-business-attire-portrait" },
+      { id: "D", src: "images/q5_d.jpg", desc: "man-suit-thoughtful" }
+    ]
+  },
+  q6: {
+    role: "Caregiver",
+    options: [
+      { id: "A", src: "images/q6_a.png", desc: "dalle-white-female-caring" },
+      { id: "B", src: "images/q6_b.jpg", desc: "male-helping-elderly-man" },
+      { id: "C", src: "images/q6_c.jpg", desc: "caregiver-nursing-home" },
+      { id: "D", src: "images/q6_d.jpg", desc: "woman-helping-exercise" }
+    ]
+  }
+};
+
+// Shuffle array (Fisher-Yates)
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Store the shuffled order for each question (for recording which position each option appeared in)
+const shuffledOrders = {};
+
+// Build image grids with shuffled order
+function buildGrids() {
+  for (const [qKey, qData] of Object.entries(imageData)) {
+    const grid = document.getElementById('grid-' + qKey);
+    const shuffled = shuffle(qData.options);
+    shuffledOrders[qKey] = shuffled.map(o => o.id);
+
+    shuffled.forEach((opt, idx) => {
+      const posLabel = String.fromCharCode(65 + idx); // A, B, C, D (position label)
+      const div = document.createElement('div');
+      div.className = 'image-option';
+      div.setAttribute('data-question', qKey);
+      div.setAttribute('data-option-id', opt.id);
+      div.setAttribute('data-desc', opt.desc);
+      div.onclick = () => selectImage(div, qKey);
+      div.innerHTML = `
+        <div class="check-mark">&#10003;</div>
+        <img src="${opt.src}" alt="Option ${posLabel}" loading="lazy">
+        <div class="label">Option ${posLabel}</div>
+      `;
+      grid.appendChild(div);
+    });
+  }
+}
+
+// State
+let currentPage = 0;
+const totalPages = 9;
+const answers = {};
+
+function updateProgress() {
+  const pct = (currentPage / (totalPages - 1)) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function showPage(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page' + n).classList.add('active');
+  currentPage = n;
+  updateProgress();
+  window.scrollTo(0, 0);
+}
+
+function nextPage() {
+  // Validate image questions (pages 1-6)
+  if (currentPage >= 1 && currentPage <= 6) {
+    const qKey = 'q' + currentPage;
+    if (!answers[qKey]) {
+      document.getElementById('req' + currentPage).classList.add('show');
+      return;
+    }
+    document.getElementById('req' + currentPage).classList.remove('show');
+  }
+  if (currentPage < totalPages - 1) showPage(currentPage + 1);
+}
+
+function prevPage() {
+  if (currentPage > 0) showPage(currentPage - 1);
+}
+
+function selectImage(el, qKey) {
+  // Deselect all in this grid
+  el.parentElement.querySelectorAll('.image-option').forEach(opt => opt.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[qKey] = {
+    selectedId: el.getAttribute('data-option-id'),
+    selectedDesc: el.getAttribute('data-desc'),
+    isDallE: el.getAttribute('data-option-id') === 'A'
+  };
+  // Hide required note
+  const reqNote = document.getElementById('req' + currentPage);
+  if (reqNote) reqNote.classList.remove('show');
+}
+
+function selectRadio(el, groupName) {
+  el.parentElement.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked = true;
+}
+
+function submitSurvey() {
+  // Collect all data
+  const response = {
+    timestamp: new Date().toISOString(),
+    answers: {},
+    shuffledOrders: shuffledOrders,
+    reasoning: document.querySelector('input[name="reasoning"]:checked')?.value || '',
+    age: document.getElementById('age').value,
+    gender: document.querySelector('input[name="gender"]:checked')?.value || '',
+    field: document.getElementById('field').value,
+    dalleChosenCount: 0
+  };
+
+  for (const [qKey, qData] of Object.entries(imageData)) {
+    const ans = answers[qKey] || {};
+    response.answers[qKey] = {
+      role: qData.role,
+      selected: ans.selectedId || 'none',
+      selectedDesc: ans.selectedDesc || 'none',
+      isDallE: ans.isDallE || false,
+      displayOrder: shuffledOrders[qKey]
+    };
+    if (ans.isDallE) response.dalleChosenCount++;
+  }
+
+  // Save to localStorage
+  const allResponses = JSON.parse(localStorage.getItem('rar_survey_responses') || '[]');
+  allResponses.push(response);
+  localStorage.setItem('rar_survey_responses', JSON.stringify(allResponses));
+
+  showPage(8);
+}
+
+function showAdmin() {
+  document.getElementById('adminPanel').style.display = 'block';
+  const allResponses = JSON.parse(localStorage.getItem('rar_survey_responses') || '[]');
+  document.getElementById('responseCount').textContent = allResponses.length;
+}
+
+function exportCSV() {
+  if (document.getElementById('adminPass').value !== 'rar2026') {
+    document.getElementById('adminMsg').textContent = 'Incorrect password.';
+    return;
+  }
+
+  const allResponses = JSON.parse(localStorage.getItem('rar_survey_responses') || '[]');
+  if (allResponses.length === 0) {
+    document.getElementById('adminMsg').textContent = 'No responses to export.';
+    return;
+  }
+
+  // Build CSV
+  const headers = ['timestamp', 'ceo_selected', 'ceo_isDallE', 'leader_selected', 'leader_isDallE',
+                    'nurse_selected', 'nurse_isDallE', 'teacher_selected', 'teacher_isDallE',
+                    'exec_selected', 'exec_isDallE', 'caregiver_selected', 'caregiver_isDallE',
+                    'dalle_chosen_count', 'reasoning', 'age', 'gender', 'field'];
+
+  let csv = headers.join(',') + '\n';
+
+  for (const r of allResponses) {
+    const row = [
+      r.timestamp,
+      r.answers.q1?.selectedDesc || '', r.answers.q1?.isDallE || false,
+      r.answers.q2?.selectedDesc || '', r.answers.q2?.isDallE || false,
+      r.answers.q3?.selectedDesc || '', r.answers.q3?.isDallE || false,
+      r.answers.q4?.selectedDesc || '', r.answers.q4?.isDallE || false,
+      r.answers.q5?.selectedDesc || '', r.answers.q5?.isDallE || false,
+      r.answers.q6?.selectedDesc || '', r.answers.q6?.isDallE || false,
+      r.dalleChosenCount || 0,
+      r.reasoning || '', r.age || '', r.gender || '',
+      '"' + (r.field || '').replace(/"/g, '""') + '"'
+    ];
+    csv += row.join(',') + '\n';
+  }
+
+  // Download
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'rar_survey_responses.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  document.getElementById('adminMsg').textContent = `Exported ${allResponses.length} responses.`;
+}
+
+// Initialize
+buildGrids();
+updateProgress();
+</script>
+</body>
+</html>
