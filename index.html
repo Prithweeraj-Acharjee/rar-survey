@@ -475,10 +475,41 @@ function submitSurvey() {
     if (ans.isDallE) response.dalleChosenCount++;
   }
 
-  // Save to localStorage
+  // Save to localStorage as backup
   const allResponses = JSON.parse(localStorage.getItem('rar_survey_responses') || '[]');
   allResponses.push(response);
   localStorage.setItem('rar_survey_responses', JSON.stringify(allResponses));
+
+  // Flatten data for FormSubmit
+  const flatData = {
+    _subject: 'RAR Survey Response #' + allResponses.length,
+    _template: 'table',
+    timestamp: response.timestamp,
+    CEO_selected: response.answers.q1?.selectedDesc || '',
+    CEO_isDallE: response.answers.q1?.isDallE || false,
+    Leader_selected: response.answers.q2?.selectedDesc || '',
+    Leader_isDallE: response.answers.q2?.isDallE || false,
+    Nurse_selected: response.answers.q3?.selectedDesc || '',
+    Nurse_isDallE: response.answers.q3?.isDallE || false,
+    Teacher_selected: response.answers.q4?.selectedDesc || '',
+    Teacher_isDallE: response.answers.q4?.isDallE || false,
+    Executive_selected: response.answers.q5?.selectedDesc || '',
+    Executive_isDallE: response.answers.q5?.isDallE || false,
+    Caregiver_selected: response.answers.q6?.selectedDesc || '',
+    Caregiver_isDallE: response.answers.q6?.isDallE || false,
+    DallE_chosen_total: response.dalleChosenCount,
+    Reasoning: response.reasoning,
+    Age: response.age,
+    Gender: response.gender,
+    Field: response.field
+  };
+
+  // Send to FormSubmit.co (responses emailed + stored on dashboard)
+  fetch('https://formsubmit.co/ajax/prithweeraj.poragach02@gmail.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(flatData)
+  }).catch(() => {}); // Silent fail — localStorage backup exists
 
   showPage(8);
 }
