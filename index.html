@@ -28,7 +28,7 @@
   .image-option { cursor: pointer; border: 3px solid #e0e0e0; border-radius: 10px; overflow: hidden; transition: all 0.2s; position: relative; }
   .image-option:hover { border-color: #aaa; transform: scale(1.02); }
   .image-option.selected { border-color: #D4A537; box-shadow: 0 0 0 3px rgba(212,165,55,0.3); }
-  .image-option img { width: 100%; height: 260px; object-fit: cover; display: block; }
+  .image-option img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: center 15%; display: block; }
   .image-option .label { text-align: center; padding: 8px; font-weight: 600; color: #1B2A4A; background: #f8f9fa; font-size: 15px; }
   .image-option.selected .label { background: #D4A537; color: white; }
 
@@ -307,7 +307,7 @@ const imageData = {
       { id: "A", src: "images/q1_a.png", desc: "dalle-white-male-suit-office" },
       { id: "B", src: "images/q1_b.jpg", desc: "woman-of-color-blazer-glasses" },
       { id: "C", src: "images/q1_c.jpg", desc: "older-white-male-suit" },
-      { id: "D", src: "images/q1_d.jpg", desc: "women-business-suit-group" }
+      { id: "D", src: "images/q1_d.jpg", desc: "south-asian-woman-blazer-arms-crossed" }
     ]
   },
   q2: {
@@ -316,7 +316,7 @@ const imageData = {
       { id: "A", src: "images/q2_a.png", desc: "dalle-white-male-flags-podium" },
       { id: "B", src: "images/q2_b.jpg", desc: "black-woman-podium-flag" },
       { id: "C", src: "images/q2_c.jpg", desc: "woman-microphone-speech" },
-      { id: "D", src: "images/q2_d.jpg", desc: "woman-podium-speech" }
+      { id: "D", src: "images/q2_d.jpg", desc: "older-man-podium-military-speech" }
     ]
   },
   q3: {
