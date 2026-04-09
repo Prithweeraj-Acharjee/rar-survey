@@ -122,7 +122,7 @@
   <!-- PAGE 1: CEO -->
   <div class="page" id="page1">
     <div class="card">
-      <h2>Question 1 of 6</h2>
+      <h2>Question 1 of 8</h2>
       <p class="subtitle">Which image best represents <strong>"a CEO"</strong>?</p>
       <div class="image-grid" id="grid-q1"></div>
       <p class="required-note" id="req1">Please select an image to continue.</p>
@@ -136,7 +136,7 @@
   <!-- PAGE 2: LEADER -->
   <div class="page" id="page2">
     <div class="card">
-      <h2>Question 2 of 6</h2>
+      <h2>Question 2 of 8</h2>
       <p class="subtitle">Which image best represents <strong>"a Leader"</strong>?</p>
       <div class="image-grid" id="grid-q2"></div>
       <p class="required-note" id="req2">Please select an image to continue.</p>
@@ -150,7 +150,7 @@
   <!-- PAGE 3: NURSE -->
   <div class="page" id="page3">
     <div class="card">
-      <h2>Question 3 of 6</h2>
+      <h2>Question 3 of 8</h2>
       <p class="subtitle">Which image best represents <strong>"a Nurse"</strong>?</p>
       <div class="image-grid" id="grid-q3"></div>
       <p class="required-note" id="req3">Please select an image to continue.</p>
@@ -164,7 +164,7 @@
   <!-- PAGE 4: TEACHER -->
   <div class="page" id="page4">
     <div class="card">
-      <h2>Question 4 of 6</h2>
+      <h2>Question 4 of 8</h2>
       <p class="subtitle">Which image best represents <strong>"a Teacher"</strong>?</p>
       <div class="image-grid" id="grid-q4"></div>
       <p class="required-note" id="req4">Please select an image to continue.</p>
@@ -178,7 +178,7 @@
   <!-- PAGE 5: EXECUTIVE -->
   <div class="page" id="page5">
     <div class="card">
-      <h2>Question 5 of 6</h2>
+      <h2>Question 5 of 8</h2>
       <p class="subtitle">Which image best represents <strong>"an Executive"</strong>?</p>
       <div class="image-grid" id="grid-q5"></div>
       <p class="required-note" id="req5">Please select an image to continue.</p>
@@ -192,7 +192,7 @@
   <!-- PAGE 6: CAREGIVER -->
   <div class="page" id="page6">
     <div class="card">
-      <h2>Question 6 of 6</h2>
+      <h2>Question 6 of 8</h2>
       <p class="subtitle">Which image best represents <strong>"a Caregiver"</strong>?</p>
       <div class="image-grid" id="grid-q6"></div>
       <p class="required-note" id="req6">Please select an image to continue.</p>
@@ -203,8 +203,36 @@
     </div>
   </div>
 
-  <!-- PAGE 7: FOLLOW-UP -->
+  <!-- PAGE 7: ACTIVE SELECTION - CEO -->
   <div class="page" id="page7">
+    <div class="card">
+      <h2>Question 7 of 8</h2>
+      <p class="subtitle">You are making a presentation about corporate leadership. Which image would you <strong>actually use</strong> for <strong>"a CEO"</strong>?</p>
+      <div class="image-grid" id="grid-q7"></div>
+      <p class="required-note" id="req7">Please select an image to continue.</p>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevPage()">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="nextPage()">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 8: ACTIVE SELECTION - NURSE -->
+  <div class="page" id="page8">
+    <div class="card">
+      <h2>Question 8 of 8</h2>
+      <p class="subtitle">You are making a presentation about healthcare workers. Which image would you <strong>actually use</strong> for <strong>"a Nurse"</strong>?</p>
+      <div class="image-grid" id="grid-q8"></div>
+      <p class="required-note" id="req8">Please select an image to continue.</p>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevPage()">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="nextPage()">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 9: FOLLOW-UP -->
+  <div class="page" id="page9">
     <div class="card">
       <h2>A few more questions</h2>
       <p class="subtitle">Help us understand your selections.</p>
@@ -272,8 +300,8 @@
     </div>
   </div>
 
-  <!-- PAGE 8: THANK YOU -->
-  <div class="page" id="page8">
+  <!-- PAGE 10: THANK YOU -->
+  <div class="page" id="page10">
     <div class="card thank-you">
       <div class="check-icon">&#10004;</div>
       <h2>Thank You!</h2>
@@ -370,6 +398,26 @@ const imageData = {
   }
 };
 
+// Q7 & Q8: Active selection — same images as Q1 (CEO) and Q3 (Nurse)
+imageData.q7 = {
+  role: "CEO_active",
+  options: [
+    { id: "A", src: "images/q1_a.png", desc: "dalle-white-male-suit-office" },
+    { id: "B", src: "images/q1_b.jpg", desc: "woman-of-color-blazer-glasses" },
+    { id: "C", src: "images/q1_c.jpg", desc: "older-white-male-suit" },
+    { id: "D", src: "images/q1_d.jpg", desc: "south-asian-woman-blazer-arms-crossed" }
+  ]
+};
+imageData.q8 = {
+  role: "Nurse_active",
+  options: [
+    { id: "A", src: "images/q3_a.png", desc: "dalle-white-female-scrubs" },
+    { id: "B", src: "images/q3_b.jpg", desc: "male-scrubs-arms-crossed" },
+    { id: "C", src: "images/q3_c.jpg", desc: "woman-documents-hospital" },
+    { id: "D", src: "images/q3_d.jpg", desc: "woman-scrubs-confident-portrait" }
+  ]
+};
+
 // Shuffle array (Fisher-Yates)
 function shuffle(arr) {
   const a = [...arr];
@@ -410,7 +458,7 @@ function buildGrids() {
 
 // State
 let currentPage = 0;
-const totalPages = 9;
+const totalPages = 11;
 const answers = {};
 
 function updateProgress() {
@@ -427,8 +475,8 @@ function showPage(n) {
 }
 
 function nextPage() {
-  // Validate image questions (pages 1-6)
-  if (currentPage >= 1 && currentPage <= 6) {
+  // Validate image questions (pages 1-8)
+  if (currentPage >= 1 && currentPage <= 8) {
     const qKey = 'q' + currentPage;
     if (!answers[qKey]) {
       document.getElementById('req' + currentPage).classList.add('show');
@@ -510,6 +558,10 @@ function submitSurvey() {
     Executive_isDallE: response.answers.q5?.isDallE || false,
     Caregiver_selected: response.answers.q6?.selectedDesc || '',
     Caregiver_isDallE: response.answers.q6?.isDallE || false,
+    CEO_active_selected: response.answers.q7?.selectedDesc || '',
+    CEO_active_isDallE: response.answers.q7?.isDallE || false,
+    Nurse_active_selected: response.answers.q8?.selectedDesc || '',
+    Nurse_active_isDallE: response.answers.q8?.isDallE || false,
     DallE_chosen_total: response.dalleChosenCount,
     Reasoning: response.reasoning,
     Age: response.age,
@@ -524,7 +576,7 @@ function submitSurvey() {
     body: JSON.stringify(flatData)
   }).catch(() => {}); // Silent fail — localStorage backup exists
 
-  showPage(8);
+  showPage(10);
 }
 
 function showAdmin() {
@@ -549,6 +601,7 @@ function exportCSV() {
   const headers = ['timestamp', 'ceo_selected', 'ceo_isDallE', 'leader_selected', 'leader_isDallE',
                     'nurse_selected', 'nurse_isDallE', 'teacher_selected', 'teacher_isDallE',
                     'exec_selected', 'exec_isDallE', 'caregiver_selected', 'caregiver_isDallE',
+                    'ceo_active_selected', 'ceo_active_isDallE', 'nurse_active_selected', 'nurse_active_isDallE',
                     'dalle_chosen_count', 'reasoning', 'age', 'gender', 'field'];
 
   let csv = headers.join(',') + '\n';
@@ -562,6 +615,8 @@ function exportCSV() {
       r.answers.q4?.selectedDesc || '', r.answers.q4?.isDallE || false,
       r.answers.q5?.selectedDesc || '', r.answers.q5?.isDallE || false,
       r.answers.q6?.selectedDesc || '', r.answers.q6?.isDallE || false,
+      r.answers.q7?.selectedDesc || '', r.answers.q7?.isDallE || false,
+      r.answers.q8?.selectedDesc || '', r.answers.q8?.isDallE || false,
       r.dalleChosenCount || 0,
       r.reasoning || '', r.age || '', r.gender || '',
       '"' + (r.field || '').replace(/"/g, '""') + '"'
